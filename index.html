@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kawada Enterprise - Quality Products for Your Business</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-decoration: none;
+            color: white;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #ecf0f1;
+        }
+
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+            padding: 0.5rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .cart-icon:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Main Content */
+        .section {
+            display: none;
+            padding: 2rem 0;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><rect fill="%23e8f4fd" width="1200" height="600"/><circle fill="%233498db" cx="200" cy="150" r="50" opacity="0.3"/><circle fill="%232ecc71" cx="800" cy="300" r="80" opacity="0.2"/><circle fill="%239b59b6" cx="1000" cy="100" r="40" opacity="0.3"/></svg>');
+            color: white;
+            text-align: center;
+            padding: 4rem 0;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-secondary {
+            background: #2ecc71;
+        }
+
+        .btn-secondary:hover {
+            background: #27ae60;
+        }
+
+        /* Products Grid */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(45deg, #f1f2f6, #ddd);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .product-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            color: #e74c3c;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .product-description {
+            color: #666;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        /* Cart */
+        .cart-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            display: none;
+        }
+
+        .cart-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-total {
+            font-size: 1.3rem;
+            font-weight: bold;
+            text-align: center;
+            margin: 1rem 0;
+            color: #2c3e50;
+        }
+
+        /* Contact Form */
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        /* Footer */
+        footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            nav ul {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0.5rem 0;
+        }
+
+        .quantity-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .quantity-btn:hover {
+            background: #2980b9;
+        }
+
+        .success-message {
+            background: #2ecc71;
+            color: white;
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="#" class="logo" onclick="showSection('home')">Kawada Enterprise</a>
+                <nav>
+                    <ul>
+                        <li><a href="#" onclick="showSection('home')">Home</a></li>
+                        <li><a href="#" onclick="showSection('products')">Products</a></li>
+                        <li><a href="#" onclick="showSection('sell')">Sell Products</a></li>
+                        <li><a href="#" onclick="showSection('contact')">Contact</a></li>
+                    </ul>
+                </nav>
+                <div class="cart-icon" onclick="toggleCart()">
+                    🛒 Cart
+                    <span class="cart-count" id="cartCount">0</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Home Section -->
+        <section id="home" class="section active">
+            <div class="hero">
+                <div class="container">
+                    <h1>Welcome to Kawada Enterprise</h1>
+                    <p>Your trusted partner for quality products and reliable service</p>
+                    <a href="#" class="btn" onclick="showSection('products')">Shop Now</a>
+                </div>
+            </div>
+            
+            <div class="container">
+                <div style="text-align: center; padding: 3rem 0;">
+                    <h2 style="margin-bottom: 2rem; color: #2c3e50;">Why Choose Kawada Enterprise?</h2>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+                        <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">⭐</div>
+                            <h3>Quality Products</h3>
+                            <p>We source only the finest products to ensure customer satisfaction</p>
+                        </div>
+                        <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">🚚</div>
+                            <h3>Fast Delivery</h3>
+                            <p>Quick and reliable delivery to your doorstep</p>
+                        </div>
+                        <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">💬</div>
+                            <h3>Customer Support</h3>
+                            <p>Dedicated support team ready to help you</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Products Section -->
+        <section id="products" class="section">
+            <div class="container">
+                <h2 style="text-align: center; margin-bottom: 2rem; color: #2c3e50;">Our Products</h2>
+                <div class="products-grid" id="productsGrid">
+                    <!-- Products will be loaded here by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Sell Products Section -->
+        <section id="sell" class="section">
+            <div class="container">
+                <h2 style="text-align: center; margin-bottom: 2rem; color: #2c3e50;">Sell Your Products</h2>
+                <form class="contact-form" onsubmit="submitProduct(event)">
+                    <div id="sellSuccess" class="success-message hidden">
+                        Thank you! Your product submission has been received. We'll contact you soon.
+                    </div>
+                    <div class="form-group">
+                        <label for="productName">Product Name</label>
+                        <input type="text" id="productName" name="productName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productCategory">Category</label>
+                        <select id="productCategory" name="productCategory" required>
+                            <option value="">Select Category</option>
+                            <option value="electronics">Electronics</option>
+                            <option value="clothing">Clothing</option>
+                            <option value="books">Books</option>
+                            <option value="home">Home & Garden</option>
+                            <option value="sports">Sports</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="productPrice">Price ($)</label>
+                        <input type="number" id="productPrice" name="productPrice" step="0.01" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productDescription">Product Description</label>
+                        <textarea id="productDescription" name="productDescription" rows="4" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="sellerName">Your Name</label>
+                        <input type="text" id="sellerName" name="sellerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="sellerEmail">Your Email</label>
+                        <input type="email" id="sellerEmail" name="sellerEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="sellerPhone">Your Phone</label>
+                        <input type="tel" id="sellerPhone" name="sellerPhone" required>
+                    </div>
+                    <button type="submit" class="btn btn-secondary" style="width: 100%;">Submit Product</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="section">
+            <div class="container">
+                <h2 style="text-align: center; margin-bottom: 2rem; color: #2c3e50;">Contact Us</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 3rem; align-items: start;">
+                    <div>
+                        <form class="contact-form" onsubmit="submitContact(event)">
+                            <div id="contactSuccess" class="success-message hidden">
+                                Thank you! Your message has been sent successfully.
+                            </div>
+                            <div class="form-group">
+                                <label for="contactName">Name</label>
+                                <input type="text" id="contactName" name="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contactEmail">Email</label>
+                                <input type="email" id="contactEmail" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contactSubject">Subject</label>
+                                <input type="text" id="contactSubject" name="subject" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contactMessage">Message</label>
+                                <textarea id="contactMessage" name="message" rows="5" required></textarea>
+                            </div>
+                            <button type="submit" class="btn" style="width: 100%;">Send Message</button>
+                        </form>
+                    </div>
+                    <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                        <h3 style="margin-bottom: 1.5rem; color: #2c3e50;">Get in Touch</h3>
+                        <div style="margin-bottom: 1rem;">
+                            <strong>📧 Email:</strong><br>
+                            info@kawadaenterprise.com
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <strong>📞 Phone:</strong><br>
+                            +1 (555) 123-4567
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <strong>📍 Address:</strong><br>
+                            123 Business Street<br>
+                            Commerce City, CA 90210
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <strong>🕒 Business Hours:</strong><br>
+                            Monday - Friday: 9:00 AM - 6:00 PM<br>
+                            Saturday: 10:00 AM - 4:00 PM<br>
+                            Sunday: Closed
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Cart Modal -->
+    <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()">
+        <div class="cart-modal" onclick="event.stopPropagation()">
+            <h3 style="margin-bottom: 1rem; color: #2c3e50;">Shopping Cart</h3>
+            <div id="cartItems"></div>
+            <div class="cart-total" id="cartTotal">Total: $0.00</div>
+            <div style="display: flex; gap: 1rem; justify-content: center;">
+                <button class="btn" onclick="checkout()">Checkout</button>
+                <button class="btn" style="background: #95a5a6;" onclick="toggleCart()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <h3>Kawada Enterprise</h3>
+                    <p>Your trusted partner for quality products and reliable service since 2020.</p>
+                </div>
+                <div>
+                    <h3>Quick Links</h3>
+                    <p><a href="#" onclick="showSection('home')" style="color: #ecf0f1;">Home</a></p>
+                    <p><a href="#" onclick="showSection('products')" style="color: #ecf0f1;">Products</a></p>
+                    <p><a href="#" onclick="showSection('contact')" style="color: #ecf0f1;">Contact</a></p>
+                </div>
+                <div>
+                    <h3>Contact Info</h3>
+                    <p>📧 info@kawadaenterprise.com</p>
+                    <p>📞 +1 (555) 123-4567</p>
+                </div>
+            </div>
+            <p>&copy; 2024 Kawada Enterprise. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Sample products data
+        const products = [
+            {
+                id: 1,
+                name: "Premium Wireless Headphones",
+                price: 89.99,
+                description: "High-quality wireless headphones with noise cancellation and premium sound quality.",
+                emoji: "🎧"
+            },
+            {
+                id: 2,
+                name: "Smart Fitness Watch",
+                price: 149.99,
+                description: "Advanced fitness tracking with heart rate monitor and GPS functionality.",
+                emoji: "⌚"
+            },
+            {
+                id: 3,
+                name: "Portable Bluetooth Speaker",
+                price: 59.99,
+                description: "Compact speaker with powerful sound and long battery life.",
+                emoji: "🔊"
+            },
+            {
+                id: 4,
+                name: "Professional Laptop Stand",
+                price: 39.99,
+                description: "Ergonomic aluminum laptop stand for better posture and cooling.",
+                emoji: "💻"
+            },
+            {
+                id: 5,
+                name: "Wireless Charging Pad",
+                price: 24.99,
+                description: "Fast wireless charging pad compatible with all Qi-enabled devices.",
+                emoji: "⚡"
+            },
+            {
+                id: 6,
+                name: "USB-C Hub Adapter",
+                price: 34.99,
+                description: "Multi-port hub with HDMI, USB 3.0, and SD card reader.",
+                emoji: "🔌"
+            }
+        ];
+
+        let cart = [];
+
+        // Show/hide sections
+        function showSection(sectionName) {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => section.classList.remove('active'));
+            document.getElementById(sectionName).classList.add('active');
+        }
+
+        // Load products
+        function loadProducts() {
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = products.map(product => `
+                <div class="product-card">
+                    <div class="product-image">${product.emoji}</div>
+                    <div class="product-title">${product.name}</div>
+                    <div class="product-price">$${product.price.toFixed(2)}</div>
+                    <div class="product-description">${product.description}</div>
+                    <button class="btn" onclick="addToCart(${product.id})">Add to Cart</button>
+                </div>
+            `).join('');
+        }
+
+        // Add to cart
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            const existingItem = cart.find(item => item.id === productId);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({...product, quantity: 1});
+            }
+            
+            updateCartDisplay();
+        }
+
+        // Update cart display
+        function updateCartDisplay() {
+            const cartCount = document.getElementById('cartCount');
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartCount.textContent = totalItems;
+
+            const cartItems = document.getElementById('cartItems');
+            const cartTotal = document.getElementById('cartTotal');
+            
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<p>Your cart is empty</p>';
+                cartTotal.textContent = 'Total: $0.00';
+                return;
+            }
+
+            cartItems.innerHTML = cart.map(item => `
+                <div class="cart-item">
+                    <div>
+                        <strong>${item.name}</strong><br>
+                        $${item.price.toFixed(2)} each
+                        <div class="quantity-controls">
+                            <button class="quantity-btn" onclick="updateQuantity(${item.id}, ${item.quantity - 1})">-</button>
+                            <span>Qty: ${item.quantity}</span>
+                            <button class="quantity-btn" onclick="updateQuantity(${item.id}, ${item.quantity + 1})">+</button>
+                        </div>
+                    </div>
+                    <div>
+                        <strong>$${(item.price * item.quantity).toFixed(2)}</strong><br>
+                        <button onclick="removeFromCart(${item.id})" style="background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; margin-top: 5px;">Remove</button>
+                    </div>
+                </div>
+            `).join('');
+
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            cartTotal.textContent = `Total: $${total.toFixed(2)}`;
+        }
+
+        // Update quantity
+        function updateQuantity(productId, newQuantity) {
+            if (newQuantity <= 0) {
+                removeFromCart(productId);
+                return;
+            }
+            
+            const item = cart.find(item => item.id === productId);
+            if (item) {
+                item.quantity = newQuantity;
+                updateCartDisplay();
+            }
+        }
+
+        // Remove from cart
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            updateCartDisplay();
+        }
+
+        // Toggle cart modal
+        function toggleCart() {
+            const overlay = document.getElementById('cartOverlay');
+            overlay.style.display = overlay.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Checkout
+        function checkout() {
+            if (cart.length === 0) {
+                alert('Your cart is empty!');
+                return;
+            }
+            
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            alert(`Thank you for your order! Total: $${total.toFixed(2)}\n\nThis is a demo - in a real store, you would be redirected to payment processing.`);
+            cart = [];
+            updateCartDisplay();
+            toggleCart();
+        }
+
+        // Submit product form
+        function submitProduct(event) {
+            event.preventDefault();
+            document.getElementById('sellSuccess').classList.remove('hidden');
+            event.target.reset();
+            setTimeout(() => {
+                document.getElementById('sellSuccess').classList.add('hidden');
+            }, 5000);
+        }
+
+        // Submit contact form
+        function submitContact(event) {
+            event.preventDefault();
+            document.getElementById('contactSuccess').classList.remove('hidden');
+            event.target.reset();
+            setTimeout(() => {
+                document.getElementById('contactSuccess').classList.add('hidden');
+            }, 5000);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProducts();
+            updateCartDisplay();
+        });
+    </script>
+</body>
+</html>
